@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>iu emem 💘</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #ffe6f0, #ffcce0);
+      overflow: hidden;
+      height: 100vh;
+      font-family: 'Dancing Script', cursive;
+      perspective: 1000px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff3399;
+      font-size: 3rem;
+      margin-top: 20px;
+      text-shadow: 2px 2px 10px #ff66aa;
+      position: relative;
+      z-index: 10;
+    }
+
+    .floating-shape {
+      position: absolute;
+      width: min(30vw, 200px);  /* Tăng kích thước ảnh */
+      height: min(30vw, 200px); /* Giữ tỷ lệ tương ứng */
+      aspect-ratio: 1/1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.3);
+      opacity: 0;
+      pointer-events: none;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      box-shadow: 0 0 14px #ff3399aa;
+      will-change: transform, opacity;
+      z-index: 5;
+      /* Tạo hình trái tim thực sự */
+      clip-path: path('M100 180 L20 100 A40 40 0 1 1 100 40 A40 40 0 1 1 180 100 Z');
+    }
+  </style>
+</head>
+<body>
+  <h1>iu em 💞</h1>
+
+  <script>
+    const body = document.body;
+    const imageUrls = [
+      'anh1.jpg',
+      'anh2.jpg',
+      'anh3.jpg',
+      'anh4.jpg',
+      'anh5.jpg',
+      'anh6.jpg',
+      'anh7.jpg',
+      'anh8.jpg',
+      'anh9.jpg',
+      'anh10.jpg'
+    ];
+
+    let currentIndex = 0;
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    class FloatingShape {
+      constructor(imageUrl) {
+        this.el = document.createElement('div');
+        this.el.classList.add('floating-shape');
+        this.el.style.backgroundImage = `url(${imageUrl})`;
+        body.appendChild(this.el);
+        this.reset();
+      }
+
+      reset() {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.vx = random(-0.7, 0.7);
+        this.vy = random(-0.7, 0.7);
+        this.vz = random(0.8, 2);
+        this.opacity = 1;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.z += this.vz;
+        this.opacity -= 0.0035;
+
+        const scale = 1 + (this.z / 300);
+        this.el.style.transform = `translate3d(${this.x}px, ${this.y}px, ${this.z}px) scale(${scale})`;
+        this.el.style.opacity = this.opacity;
+
+        if (this.opacity <= 0 || this.z > 600) {
+          this.el.remove(); // Remove from DOM when opacity reaches 0
+        }
+      }
+    }
+
+    const shapes = [];
+
+    function animate() {
+      for (let i = shapes.length - 1; i >= 0; i--) {
+        shapes[i].update();
+        if (shapes[i].opacity <= 0) {
+          shapes.splice(i, 1);
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    function launchNextHeart() {
+      const shape = new FloatingShape(imageUrls[currentIndex]);
+      shapes.push(shape);
+      currentIndex = (currentIndex + 1) % imageUrls.length;
+    }
+
+    setInterval(launchNextHeart, 600);  // Thời gian chèn ảnh
+  </script>
+</body>
+</html>
